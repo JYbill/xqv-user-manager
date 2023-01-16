@@ -1,5 +1,5 @@
-// import { DefaultErrorFilter } from './filter/default.filter';
-// import { NotFoundFilter } from './filter/notfound.filter';
+import { DefaultErrorFilter } from './filter/default.filter';
+import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from "./middleware/report.middleware";
 import { join } from "path";
 
@@ -14,10 +14,10 @@ import * as validate from "@midwayjs/validate";
     validate,
     {
       component: info,
-      enabledEnvironment: ["local"],
-    },
+      enabledEnvironment: ["local"]
+    }
   ],
-  importConfigs: [join(__dirname, "./config")],
+  importConfigs: [join(__dirname, "./config")]
 })
 export class ContainerLifeCycle {
   @App()
@@ -27,6 +27,6 @@ export class ContainerLifeCycle {
     // add middleware
     this.app.useMiddleware([ReportMiddleware]);
     // add filter
-    // this.app.useFilter([NotFoundFilter, DefaultErrorFilter]);
+    this.app.useFilter([NotFoundFilter, DefaultErrorFilter]);
   }
 }
