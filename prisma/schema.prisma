@@ -4,7 +4,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["clientExtensions"]
 }
 
@@ -21,4 +21,18 @@ model User {
   isAdmin      Boolean  @default(false) // 是否是管理员，作用于casbin的超级管理员权限
 
   @@map("users")
+}
+
+// Casbin必备
+model CasbinRule {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  ptype String
+  v0    String?
+  v1    String?
+  v2    String?
+  v3    String?
+  v4    String?
+  v5    String?
+
+  @@map("casbin_rule")
 }

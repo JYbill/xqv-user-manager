@@ -14,6 +14,7 @@
     "@midwayjs/passport": "^3.9.9",
     "@midwayjs/validate": "^3.0.0",
     "@prisma/client": "^4.8.1",
+    "casbin-prisma-adapter": "^1.2.0",
     "passport-jwt": "^4.0.1"
   },
   "devDependencies": {

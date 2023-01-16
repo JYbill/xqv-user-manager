@@ -2,6 +2,7 @@ import { DefaultErrorFilter } from './filter/default.filter';
 import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from "./middleware/report.middleware";
 import { join } from "path";
+import * as casbin from '@midwayjs/casbin';
 
 import { App, Configuration } from "@midwayjs/decorator";
 import * as info from "@midwayjs/info";
@@ -12,6 +13,7 @@ import * as validate from "@midwayjs/validate";
   imports: [
     koa,
     validate,
+    casbin,
     {
       component: info,
       enabledEnvironment: ["local"]
