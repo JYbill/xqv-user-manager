@@ -1,5 +1,6 @@
-import { MidwayAppInfo, MidwayConfig } from "@midwayjs/core";
 import { join } from "path";
+
+import { MidwayAppInfo, MidwayConfig } from "@midwayjs/core";
 
 export default (appInfo: MidwayAppInfo): MidwayConfig => {
   return {
@@ -9,7 +10,15 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
       port: 7001,
     },
     casbin: {
-      modelPath: join(appInfo.appDir, 'casbin_rbac_abac.conf'),
-    }
+      modelPath: join(appInfo.appDir, "casbin/casbin_rbac_abac.conf"),
+    },
+    jwtMiddlewareWhiteList: [],
+    jwt: {
+      secret: process.env.JWT_SECURT,
+      expiresIn: "1d",
+    },
+    passport: {
+      session: false,
+    },
   };
-}
+};

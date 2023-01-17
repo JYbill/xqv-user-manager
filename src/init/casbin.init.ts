@@ -1,8 +1,9 @@
-import { Inject, Logger } from "@midwayjs/decorator";
+import { PrismaServiceFactory } from "../ioc/prismaFactory";
+import { PrismaAdapter } from "casbin-prisma-adapter";
+
 import { CasbinEnforcerService } from "@midwayjs/casbin";
 import { Autoload, ILogger, Init } from "@midwayjs/core";
-import { PrismaAdapter } from "casbin-prisma-adapter";
-import { PrismaServiceFactory } from "../ioc/prismaFactory";
+import { Inject, Logger } from "@midwayjs/decorator";
 
 @Autoload()
 export default class CasbinInit {
@@ -12,34 +13,40 @@ export default class CasbinInit {
   @Inject("prisma")
   prisma: PrismaServiceFactory["prisma"];
 
-
   @Logger()
   logger: ILogger;
+
+  private needUpd = false;
 
   @Init()
   async init() {
     const adaptor = await PrismaAdapter.newAdapter(this.prisma);
     this.enforcer.setAdapter(adaptor);
 
-    // 用户继承
-    await this.enforcer.addRoleForUser('xiaoqinvar', 'MANAGER');
-    await this.enforcer.addRoleForUser('MR-frog', 'MANAGER');
+    if (this.needUpd) {
+      const casbinAsync = [
+        // 用户继承
+        this.enforcer.addRoleForUser("xiaoqinvar", "MANAGER"),
+        this.enforcer.addRoleForUser("MR-frog", "MANAGER"),
 
-    // 资源继承
-    await this.enforcer.addNamedGroupingPolicy('g2', '/v1/casbin/users', 'casbinGetApi');
-    await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user', 'userGetApi');
-    await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user/verify', 'userPostApi');
-    await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user', 'userPostApi');
-    await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user/:id', 'userPutApi');
-    await this.enforcer.addNamedGroupingPolicy('g2', '/v1/user', 'userDelApi');
+        // 资源继承
+        this.enforcer.addNamedGroupingPolicy("g2", "/v1/casbin/users", "casbinGetApi"),
+        this.enforcer.addNamedGroupingPolicy("g2", "/v1/user", "userGetApi"),
+        this.enforcer.addNamedGroupingPolicy("g2", "/v1/user/verify", "userPostApi"),
+        this.enforcer.addNamedGroupingPolicy("g2", "/v1/user", "userPostApi"),
+        this.enforcer.addNamedGroupingPolicy("g2", "/v1/user/:id", "userPutApi"),
+        this.enforcer.addNamedGroupingPolicy("g2", "/v1/user", "userDelApi"),
 
-    // 策略p
-    await this.enforcer.addNamedPolicy('p', 'MANAGER', 'casbinGetApi', 'GET');
-    await this.enforcer.addNamedPolicy('p', 'MANAGER', 'userGetApi', 'GET');
-    await this.enforcer.addNamedPolicy('p', 'MANAGER', 'userPostApi', 'POST');
-    await this.enforcer.addNamedPolicy('p', 'MANAGER', 'userPutApi', 'PUT');
-    await this.enforcer.addNamedPolicy('p', 'MANAGER', 'userDelApi', 'DELETE');
+        // 策略p
+        this.enforcer.addNamedPolicy("p", "MANAGER", "casbinGetApi", "GET"),
+        this.enforcer.addNamedPolicy("p", "MANAGER", "userGetApi", "GET"),
+        this.enforcer.addNamedPolicy("p", "MANAGER", "userPostApi", "POST"),
+        this.enforcer.addNamedPolicy("p", "MANAGER", "userPutApi", "PUT"),
+        this.enforcer.addNamedPolicy("p", "MANAGER", "userDelApi", "DELETE"),
+      ];
+      await Promise.all(casbinAsync);
+    }
 
-    this.logger.info('Casbin is ready!');
+    this.logger.info("Casbin is ready!");
   }
 }
