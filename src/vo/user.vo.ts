@@ -1,4 +1,5 @@
 import type { User } from "@prisma/client";
+
 import { Rule, RuleType } from "@midwayjs/validate";
 
 export class UserVo implements User {
@@ -8,7 +9,7 @@ export class UserVo implements User {
   username: string;
   @Rule(RuleType.string())
   nickname: string;
-  @Rule(RuleType.string())
+  @Rule(RuleType.string().min(6))
   password: string;
   @Rule(RuleType.forbidden())
   salt: string;
