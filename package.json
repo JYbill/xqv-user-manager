@@ -15,6 +15,7 @@
     "@midwayjs/passport": "^3.9.9",
     "@midwayjs/validate": "^3.9.9",
     "@prisma/client": "^4.8.1",
+    "casbin": "^5.20.3",
     "casbin-prisma-adapter": "^1.2.0",
     "crypto-js": "^4.1.1",
     "dotenv": "^16.0.3",

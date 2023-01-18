@@ -1,11 +1,10 @@
 import Res from "../vo/res.vo";
 
-import { HttpStatus, MidwayHttpError } from "@midwayjs/core";
-import { UnauthorizedError } from "@midwayjs/core/dist/error/http";
+import { HttpStatus, MidwayHttpError, httpError } from "@midwayjs/core";
 import { Catch } from "@midwayjs/decorator";
 import { Context } from "@midwayjs/koa";
 
-@Catch(UnauthorizedError)
+@Catch(httpError.UnauthorizedError)
 export default class UnAuthorizedFilter {
   async catch(err: MidwayHttpError, ctx: Context) {
     ctx.logger.error(err);

@@ -3,15 +3,17 @@ import { join } from "path";
 
 import { MidwayAppInfo, MidwayConfig } from "@midwayjs/core";
 
+export type CasbinGuardType = {
+  debug: boolean;
+};
 export default (appInfo: MidwayAppInfo): MidwayConfig => {
-  return {
-    // use for cookie sign key, should change to your own and keep security
+  const config = Object.create({
     keys: "1673866289227_9786",
     koa: {
       port: 7001,
     },
     casbin: {
-      modelPath: join(appInfo.appDir, "casbin/casbin_rbac_abac.conf"),
+      modelPath: join(appInfo.appDir, "casbin/model.conf"),
     },
     jwtMiddlewareWhiteList: [V1.User + "/register", V1.User + "/login"],
     jwt: {
@@ -21,5 +23,13 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
     passport: {
       session: false,
     },
+  });
+
+  // 自定义配置项
+  // casbin守卫配置
+  const casbinGuardConfig: CasbinGuardType = {
+    debug: false, // debug打印模式
   };
+  config.casbinGuard = casbinGuardConfig;
+  return config;
 };

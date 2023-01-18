@@ -1,4 +1,5 @@
 import { DefaultErrorFilter } from "./filter/default.filter";
+import ForbiddenFilter from "./filter/forbidden.filter";
 import { NotFoundFilter } from "./filter/notfound.filter";
 import UnAuthorizedFilter from "./filter/unauthorized.filter";
 import { JwtPassportMiddleware } from "./middleware/jwt.middleware";
@@ -39,6 +40,6 @@ export class ContainerLifeCycle {
     // add middleware
     this.app.useMiddleware([ResponseMiddleware, ReportMiddleware, JwtPassportMiddleware]);
     // add filter
-    this.app.useFilter([UnAuthorizedFilter, NotFoundFilter, DefaultErrorFilter]);
+    this.app.useFilter([ForbiddenFilter, UnAuthorizedFilter, NotFoundFilter, DefaultErrorFilter]);
   }
 }
