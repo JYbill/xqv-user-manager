@@ -1,9 +1,5 @@
 import { PrismaServiceFactory } from "../ioc/prismaFactory";
-import * as casbin from "casbin";
 import { PrismaAdapter } from "casbin-prisma-adapter";
-import { newModelFromFile } from "casbin/lib/cjs/model/model";
-import * as path from "path";
-import { join } from "path";
 
 import { CasbinEnforcerService } from "@midwayjs/casbin";
 import { Autoload, ILogger, IMidwayApplication, Init } from "@midwayjs/core";

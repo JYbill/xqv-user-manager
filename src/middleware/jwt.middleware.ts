@@ -1,6 +1,6 @@
 import { JwtStrategy } from "../strategy/jwt.strategy";
 
-import { Config, Middleware } from "@midwayjs/decorator";
+import { Config, Inject, Middleware } from "@midwayjs/decorator";
 import { Context } from "@midwayjs/koa";
 import { AuthenticateOptions, PassportMiddleware } from "@midwayjs/passport";
 

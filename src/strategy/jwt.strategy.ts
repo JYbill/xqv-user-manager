@@ -1,4 +1,3 @@
-import { PrismaServiceFactory } from "../ioc/prismaFactory";
 import { UserVo } from "../vo/user.vo";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
@@ -13,9 +12,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
 
   @Logger()
   logger: ILogger;
-
-  @Inject("prismaExtends")
-  extendPrisma: PrismaServiceFactory["extendPrisma"];
 
   /**
    * 策略的验证

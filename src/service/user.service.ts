@@ -56,12 +56,13 @@ export class UserService extends BaseService {
   /**
    * 根据id获取用户（⚠️ 有密码、盐、token）
    * @param id
+   * @param token web token字符串
    */
-  async findUserByIdWithAll(id: string) {
+  async validateTokenByUid(id: string, token: string): Promise<boolean> {
     const findUser = await this.extendPrisma.user.findUnique({
       where: { id },
     });
-    return findUser;
+    return findUser.webToken === token;
   }
 
   /**
