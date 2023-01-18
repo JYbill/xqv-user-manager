@@ -14,13 +14,10 @@ export class UserController extends BaseController {
   @Inject()
   userService: UserService;
 
-  @Inject()
-  jwt: JwtService;
-
   @Post("/register")
   @Validate()
   async getUser(@Body() user: UserVo) {
-    const findUser = await this.userService.getUserByUName("xqv");
+    const findUser = await this.userService.findUserByUName("xqv");
     if (findUser) {
       throw new ProjectError("用户名已存在");
     }
@@ -31,12 +28,11 @@ export class UserController extends BaseController {
 
   @Post("/login")
   async login(@Body() user: UserVo) {
-    const findUser = await this.userService.getUserByUName(user.username);
+    const findUser = await this.userService.findUserByUName(user.username);
     if (!findUser) {
       throw new ProjectError("用户名不存在");
     }
-    const loginUser = await this.userService.loginByPwd(user);
-    const token = await this.jwt.sign(loginUser);
+    const token = await this.userService.loginByPwd(user);
     return token;
   }
 

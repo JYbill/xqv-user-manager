@@ -3,6 +3,7 @@ import type { User } from "@prisma/client";
 import { Rule, RuleType } from "@midwayjs/validate";
 
 export class UserVo implements User {
+  webToken: string;
   @Rule(RuleType.string())
   id: string;
   @Rule(RuleType.string())
@@ -14,9 +15,9 @@ export class UserVo implements User {
   @Rule(RuleType.forbidden())
   salt: string;
   @Rule(RuleType.forbidden())
-  gmt_create: Date;
-  @Rule(RuleType.forbidden())
-  gmt_modified: Date;
-  @Rule(RuleType.forbidden())
   isAdmin: boolean;
+  @Rule(RuleType.forbidden())
+  gmtCreate: Date;
+  @Rule(RuleType.forbidden())
+  gmtModified: Date;
 }

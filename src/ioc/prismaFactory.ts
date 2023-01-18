@@ -4,7 +4,7 @@
  * @Author: 小钦var
  * @Date: 2022/12/31 13:39
  */
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 
 import { Autoload, Destroy, Init } from "@midwayjs/core";
@@ -78,6 +78,14 @@ export class PrismaServiceFactory {
               }
             }
             return payloadList;
+          },
+        },
+        user: {
+          excludePersonal(user: User) {
+            delete user["webToken"];
+            delete user["salt"];
+            delete user["password"];
+            return user;
           },
         },
       },

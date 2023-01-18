@@ -1,7 +1,9 @@
+import { PrismaServiceFactory } from "../ioc/prismaFactory";
+import { UserVo } from "../vo/user.vo";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
 import { ILogger } from "@midwayjs/core";
-import { Config, Logger } from "@midwayjs/decorator";
+import { Config, Inject, Logger } from "@midwayjs/decorator";
 import { CustomStrategy, PassportStrategy } from "@midwayjs/passport";
 
 @CustomStrategy()
@@ -12,12 +14,15 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
   @Logger()
   logger: ILogger;
 
+  @Inject("prismaExtends")
+  extendPrisma: PrismaServiceFactory["extendPrisma"];
+
   /**
    * 策略的验证
    * @param payload token = `${sign}.${payload = 信息}.${加密(sign + payload + 密钥)}`，
    *    这里是base解码payload信息，转的json对象
    */
-  async validate(payload) {
+  async validate(payload: UserVo) {
     return payload;
   }
 
