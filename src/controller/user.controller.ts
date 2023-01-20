@@ -5,8 +5,7 @@ import { UserService } from "../service/user.service";
 import { UserVo } from "../vo/user.vo";
 import BaseController from "./base.controller";
 
-import { Body, Controller, Get, Inject, Post, Query, UseGuard } from "@midwayjs/decorator";
-import { JwtService } from "@midwayjs/jwt";
+import { Body, Controller, Get, Headers, Inject, Post, UseGuard } from "@midwayjs/decorator";
 import { Validate } from "@midwayjs/validate";
 
 @Controller(V1.User)
@@ -36,9 +35,25 @@ export class UserController extends BaseController {
     return token;
   }
 
+  @Post("/fresh")
+  async fresh(@Body("freshToken") freshToken: string, @Headers("Authorization") webToken: string) {
+    if (freshToken.trim().length <= 0 || webToken.trim().length <= 0) {
+      throw new ProjectError("/fresh接口，参数传递有误");
+    }
+    webToken = webToken.replace("Bearer ", "");
+    freshToken = freshToken.replace("Bearer ", "");
+    const exist = await this.userService.validateTokens(freshToken, webToken);
+    if (!exist) {
+      throw new ProjectError("刷新token、登陆token不一致, 请联系开发人员");
+    }
+
+    const userPayload = await this.userService.parseJWT(webToken);
+    return await this.userService.createToken(userPayload);
+  }
+
   @UseGuard(CasbinGuard)
   @Get("/all")
   async getAllUsers() {
-    return "ok.";
+    return await this.userService.findAll();
   }
 }

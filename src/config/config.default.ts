@@ -15,10 +15,12 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
     casbin: {
       modelPath: join(appInfo.appDir, "casbin/model.conf"),
     },
-    jwtMiddlewareWhiteList: [V1.User + "/register", V1.User + "/login"],
+    jwtMiddlewareWhiteList: [V1.User + "/register", V1.User + "/login", V1.User + "/fresh"],
     jwt: {
       secret: process.env.JWT_SECURT,
-      expiresIn: "1d",
+      // expiresIn: "1d",
+      expiresIn: "5s",
+      freshExpires: "6d",
     },
     passport: {
       session: false,

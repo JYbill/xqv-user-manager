@@ -1,3 +1,4 @@
+import { Action, Role } from "../enum/index.enum";
 import { PrismaServiceFactory } from "../ioc/prismaFactory";
 import { PrismaAdapter } from "casbin-prisma-adapter";
 
@@ -31,13 +32,13 @@ export default class CasbinInit {
     // 授权策略
     const casbinAsync = [
       // g 角色继承
-      enforce.addNamedGroupingPolicy("g", "xiaoqinvar", "MANAGER"),
+      enforce.addNamedGroupingPolicy("g", "xiaoqinvar", Role.Manager),
 
       // g2 权限继承
       enforce.addNamedGroupingPolicy("g2", "/v1/user/all", "userGetApi"),
 
       // p 角色:权限关系
-      enforce.addNamedPolicy("p", "MANAGER", "userGetApi", "GET"),
+      enforce.addNamedPolicy("p", Role.Manager, "userGetApi", Action.GET),
     ];
     await Promise.all(casbinAsync);
     this.logger.info("Casbin is loaded.");

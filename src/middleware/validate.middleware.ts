@@ -7,7 +7,7 @@ import { ProjectError } from "../filter/project.filter";
 import { UserService } from "../service/user.service";
 import { UserVo } from "../vo/user.vo";
 
-import { HttpStatus, IMiddleware } from "@midwayjs/core";
+import { IMiddleware } from "@midwayjs/core";
 import { Config, Middleware } from "@midwayjs/decorator";
 import { Context, NextFunction } from "@midwayjs/koa";
 

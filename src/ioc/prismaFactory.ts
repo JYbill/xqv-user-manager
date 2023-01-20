@@ -83,6 +83,7 @@ export class PrismaServiceFactory {
         user: {
           excludePersonal(user: User) {
             delete user["webToken"];
+            delete user["freshToken"];
             delete user["salt"];
             delete user["password"];
             return user;

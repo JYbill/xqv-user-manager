@@ -20,3 +20,7 @@
 - jwt认证 ✅
 - casbin授权 ✅
 - 前端管理界面（React）
+- 支持登陆token，刷新token
+  - 认证使用登陆token
+  - 刷新token帮助用户在刷新token时间范围内无感知刷新所有token
+  - 刷新token > 登陆token

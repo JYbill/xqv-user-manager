@@ -1,5 +1,9 @@
+/**
+ * @Description: 进入casbin守卫说明，认证安全，user状态正常，进行鉴权操作
+ * @Author: 小钦var
+ * @Date: 2023/1/18 18:33
+ */
 import { CasbinGuardType } from "../config/config.default";
-import { UserVo } from "../vo/user.vo";
 
 import { CasbinEnforcerService } from "@midwayjs/casbin";
 import { Guard, IGuard, ILogger } from "@midwayjs/core";

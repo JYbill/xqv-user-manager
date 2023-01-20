@@ -18,6 +18,8 @@ model User {
   gmtModified DateTime @default(now()) @updatedAt @map("gmt_modified")
   isAdmin     Boolean  @default(false) // 是否是管理员，作用于casbin的超级管理员权限
   webToken    String?  @map("web_token")
+  /// 刷新token一般过期时间远大于登陆token，一般设置一周
+  freshToken  String?  @map("fresh_token")
 
   @@map("users")
 }

@@ -3,14 +3,18 @@ import { UserVo } from "../vo/user.vo";
 import BaseService from "./base.service";
 import { User } from "@prisma/client";
 import * as CryptoJS from "crypto-js";
+import * as ms from "ms";
 
-import { Inject, Provide } from "@midwayjs/decorator";
+import { Config, Inject, Provide } from "@midwayjs/decorator";
 import { JwtService } from "@midwayjs/jwt";
 
 @Provide()
 export class UserService extends BaseService {
   @Inject()
   jwt: JwtService;
+
+  @Config("jwt.freshExpires")
+  freshExpires: string;
 
   /**
    * 创建用户，并返回不包含盐、密码的用户实体
@@ -26,6 +30,52 @@ export class UserService extends BaseService {
     });
     const excludeUser = this.extendPrisma.user.excludePersonal(createUser);
     return excludeUser;
+  }
+
+  /**
+   * 生成token 、刷新token并设置在db中
+   * @param userInfo
+   */
+  async createToken(userInfo: UserVo) {
+    if (!userInfo) {
+      throw new ProjectError("jwt payload must be exist");
+    }
+    const token = this.jwt.signSync(userInfo);
+    const freshUserInfo = {
+      id: userInfo.id,
+      username: userInfo.username,
+    };
+    const freshToken = this.jwt.signSync(freshUserInfo, {
+      expiresIn: this.freshExpires,
+    });
+    // this.logger.info(this.jwt.decodeSync(freshToken));
+    const updUser = await this.extendPrisma.user.update({
+      where: {
+        id: userInfo.id,
+      },
+      data: {
+        webToken: token,
+        freshToken: freshToken,
+      },
+    });
+    return {
+      webToken: token,
+      freshToken: freshToken,
+    };
+  }
+
+  /**
+   * 获取所有用户
+   */
+  async findAll() {
+    return await this.extendPrisma.user.findMany({
+      select: {
+        id: true,
+        isAdmin: true,
+        nickname: true,
+        username: true,
+      },
+    });
   }
 
   /**
@@ -51,6 +101,38 @@ export class UserService extends BaseService {
     });
     const excludeUser = this.extendPrisma.user.exclude(findUser, ["username"]);
     return excludeUser;
+  }
+
+  /**
+   * 解析jwt token字符串
+   * @param token
+   */
+  async parseJWT(token: string) {
+    const user = this.jwt.decodeSync(token) as UserVo;
+    const userVo = {} as UserVo;
+    userVo.id = user.id;
+    userVo.username = user.username;
+    userVo.nickname = user.nickname;
+    return userVo;
+  }
+
+  /**
+   * 校验登陆、刷新token是否在数据库中真实存在
+   * @param freshToken 刷新token
+   * @param webToken 登陆token
+   */
+  async validateTokens(freshToken: string, webToken: string): Promise<boolean> {
+    const user = await this.extendPrisma.user.findFirst({
+      where: {
+        webToken,
+        freshToken,
+      },
+      select: {
+        webToken: true,
+        freshToken: true,
+      },
+    });
+    return !!user;
   }
 
   /**
@@ -81,20 +163,12 @@ export class UserService extends BaseService {
     if (pwd.toString() !== findUser.password) {
       throw new ProjectError("账号密码错误");
     }
-    // 提出隐私
+    // 剔除隐私
     let excludeUser = this.extendPrisma.user.exclude(findUser, ["gmtCreate", "gmtModified"]);
     excludeUser = this.extendPrisma.user.excludePersonal(findUser);
+    // this.logger.info(excludeUser);
 
     // 记录token
-    const token = this.jwt.signSync(excludeUser);
-    const updUser = await this.extendPrisma.user.update({
-      where: {
-        id: findUser.id,
-      },
-      data: {
-        webToken: token,
-      },
-    });
-    return token;
+    return await this.createToken(excludeUser as UserVo);
   }
 }

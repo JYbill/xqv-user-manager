@@ -3,6 +3,9 @@ import type { User } from "@prisma/client";
 import { Rule, RuleType } from "@midwayjs/validate";
 
 export class UserVo implements User {
+  @Rule(RuleType.string().min(10))
+  freshToken: string;
+  @Rule(RuleType.forbidden())
   webToken: string;
   @Rule(RuleType.string())
   id: string;

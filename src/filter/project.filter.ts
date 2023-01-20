@@ -12,6 +12,7 @@ export class ProjectError extends MidwayError {}
 export class ProjectErrorFilter {
   async catch(err: MidwayHttpError, ctx: Context) {
     ctx.status = HttpStatus.BAD_REQUEST;
+    ctx.logger.info(err);
     ctx.body = Res.error(err.message);
   }
 }
