@@ -3,7 +3,6 @@ import { UserVo } from "../vo/user.vo";
 import BaseService from "./base.service";
 import { User } from "@prisma/client";
 import * as CryptoJS from "crypto-js";
-import * as ms from "ms";
 
 import { Config, Inject, Provide } from "@midwayjs/decorator";
 import { JwtService } from "@midwayjs/jwt";

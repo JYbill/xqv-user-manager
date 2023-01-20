@@ -9,6 +9,6 @@ export default class UnAuthorizedFilter {
   async catch(err: MidwayHttpError, ctx: Context) {
     ctx.logger.error(err);
     ctx.status = HttpStatus.UNAUTHORIZED;
-    ctx.body = Res.error("认证失败");
+    ctx.body = Res.error("认证失败或jwt超时", HttpStatus.UNAUTHORIZED);
   }
 }
