@@ -1,7 +1,7 @@
 {
   "name": "xqv-user-manager",
   "version": "1.0.0",
-  "description": "",
+  "description": "SSO登陆系统",
   "private": true,
   "dependencies": {
     "@midwayjs/bootstrap": "^3.0.0",

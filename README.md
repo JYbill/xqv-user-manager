@@ -1,5 +1,7 @@
 # xqv-user-manager
 
+> 该项目已准备弃用，准备重新整理一套nest、passport、casbin的认证授权管理系统
+
 > 该项目作为自己所有项目SSO单点登录系统
 
 ## 技术选型 stack
